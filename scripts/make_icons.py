@@ -71,13 +71,28 @@ def make_icon(size: int) -> Image.Image:
     return icon.resize((size, size), Image.LANCZOS)
 
 
+def make_store_logo(size: int = 300) -> Image.Image:
+    """Edge 商店 Logo：300×300，要求不透明（不加圆角蒙版，铺满画布）。"""
+    icon = gradient_bg(MASTER).convert("RGBA")
+    icon.alpha_composite(dice_layer(MASTER))
+    icon.alpha_composite(star_layer(MASTER))
+    icon = icon.resize((size, size), Image.LANCZOS)
+    opaque = Image.new("RGB", icon.size, (0, 0, 0))
+    opaque.paste(icon, mask=icon.split()[3])
+    return opaque
+
+
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for size in (16, 48, 128):
         path = OUT_DIR / f"icon{size}.png"
         make_icon(size).save(path)
         print(f"[ok] {path.relative_to(ROOT)}")
-    (OUT_DIR / "icon512-preview.png").unlink(missing_ok=True)
+    store_dir = ROOT / "store_assets"
+    store_dir.mkdir(exist_ok=True)
+    logo = store_dir / "store-logo-300.png"
+    make_store_logo(300).save(logo)
+    print(f"[ok] {logo.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

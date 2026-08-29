@@ -72,10 +72,15 @@ project-webjump/
 └── README.md
 ```
 
+## 隐私说明
+
+WebJump **不收集、不上传任何数据**：网站数据、收藏、屏蔽、访问历史与设置全部通过 `chrome.storage` 仅保存在你的浏览器本地；扩展没有任何远程请求、统计埋点或账号体系。卸载扩展即彻底删除全部数据。
+
 ## 开发说明
 
 - 纯 HTML / CSS / ES Module，无构建步骤；改动后到扩展页点「重新加载」即可生效。
 - 核心逻辑与浏览器 API 解耦：`lib/surprise.js` 是纯函数，测试跑 `node scripts/test_core.mjs`（Node 内置 stub 掉 chrome.storage）。
+- 商店发布包用 `python scripts/package.py` 生成（zipfile 正斜杠路径，避免 Compress-Archive 的反斜杠兼容问题）；上架材料与文案见 `docs/edge-store-listing.md`，商店 Logo 由 `scripts/make_icons.py` 一并输出到 `store_assets/`。
 
 ## 许可与致谢
 
