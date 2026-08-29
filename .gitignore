@@ -1,0 +1,13 @@
+# ZCode 工作区内部文件
+.zcode/
+
+# 构建产物（发布包用 Compress-Archive 现打即可）
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+
+# 系统文件
+.DS_Store
+Thumbs.db

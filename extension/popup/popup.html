@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebJump</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎲</span>
+      <div class="brand-text">
+        <strong>WebJump</strong>
+        <span id="siteCount" class="muted">…个有趣网站</span>
+      </div>
+    </div>
+    <button id="openManage" class="icon-btn" title="打开管理页">⚙</button>
+  </header>
+
+  <section class="hero">
+    <button id="surpriseBtn" class="surprise-btn">
+      <span class="dice">🎲</span>
+      <span class="txt">Surprise !</span>
+    </button>
+    <p id="tip" class="tip" hidden></p>
+    <div class="scope-row">
+      <label for="scopeSel">抽取范围</label>
+      <select id="scopeSel"></select>
+    </div>
+  </section>
+
+  <section class="search">
+    <input id="searchInput" type="text" placeholder="搜索网站名称 / 简介 / 链接…" autocomplete="off" />
+    <div id="searchResults" class="results" hidden></div>
+  </section>
+
+  <section class="recent">
+    <h3>最近访问</h3>
+    <ul id="recentList"></ul>
+  </section>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

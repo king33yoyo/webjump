@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "WebJump · 网站惊喜跳跃",
+  "short_name": "WebJump",
+  "version": "1.0.1",
+  "description": "收录 LKs《良心到难以置信的网站推荐》的 300+ 个有趣网站：一键 Surprise 随机跳转，收藏、屏蔽、分类管理，支持自定义网站与导入导出。",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "WebJump · 来点惊喜",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "options_ui": {
+    "page": "manage/manage.html",
+    "open_in_tab": true
+  },
+  "permissions": ["storage", "favicon", "contextMenus"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+W"
+      },
+      "description": "打开 WebJump 弹窗"
+    },
+    "surprise": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Surprise！随机跳转到一个有趣网站"
+    }
+  }
+}

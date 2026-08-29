@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebJump · 网站管理</title>
+  <link rel="stylesheet" href="manage.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎲</span>
+      <h1>WebJump <span class="sub">网站管理</span></h1>
+    </div>
+    <div id="stats" class="stats"></div>
+  </header>
+
+  <div class="toolbar">
+    <button id="btnAdd" class="btn primary">＋ 添加网站</button>
+    <button id="btnImport" class="btn">导入</button>
+    <button id="btnExport" class="btn">导出</button>
+    <button id="btnReset" class="btn danger-ghost">恢复默认数据</button>
+    <span class="spacer"></span>
+    <button id="btnSettings" class="btn">⚙ 设置</button>
+    <input id="fileInput" type="file" accept=".json,application/json" hidden />
+  </div>
+
+  <section id="settingsPanel" class="settings" hidden>
+    <h2>设置</h2>
+    <div class="setting-row">
+      <div>
+        <div class="s-title">Surprise 默认抽取范围</div>
+        <div class="s-desc">弹窗和快捷键共用这个范围</div>
+      </div>
+      <select id="setScope"></select>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="s-title">新标签页打开网站</div>
+        <div class="s-desc">关闭则在当前标签页跳转</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="setOpenNew" /><span></span></label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="s-title">不重复抽取（洗牌袋）</div>
+        <div class="s-desc">一轮内每个网站都会被抽到，抽完自动重洗</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="setNoRepeat" /><span></span></label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="s-title">访问记录</div>
+        <div class="s-desc" id="historyInfo">—</div>
+      </div>
+      <button id="btnClearHistory" class="btn danger-ghost">清空记录</button>
+    </div>
+  </section>
+
+  <section class="filters">
+    <input id="fSearch" type="text" placeholder="搜索：名称 / 简介 / 链接…" autocomplete="off" />
+    <select id="fKind"></select>
+    <select id="fCat"></select>
+    <select id="fStatus">
+      <option value="all">全部状态</option>
+      <option value="fav">⭐ 已收藏</option>
+      <option value="blocked">🚫 已屏蔽</option>
+      <option value="custom">✏️ 自定义</option>
+      <option value="unvisited">从未访问</option>
+    </select>
+    <select id="fSort">
+      <option value="kind">按期数（新→旧）</option>
+      <option value="title">按名称</option>
+      <option value="visits">按访问次数</option>
+    </select>
+    <span id="countInfo" class="count"></span>
+  </section>
+
+  <main id="grid" class="grid"></main>
+
+  <!-- 添加 / 编辑弹窗 -->
+  <div id="modalMask" class="mask" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <h2 id="modalTitle">添加网站</h2>
+      <label>名称 <span class="req">*</span>
+        <input id="mTitle" type="text" maxlength="60" />
+      </label>
+      <label>链接 <span class="req">*</span>
+        <input id="mHref" type="text" placeholder="https://…" />
+      </label>
+      <label>简介
+        <input id="mSlogan" type="text" maxlength="120" />
+      </label>
+      <label>分类（用逗号分隔多个）
+        <input id="mCats" type="text" placeholder="工具, 音乐" />
+      </label>
+      <label>期数
+        <select id="mKind"></select>
+      </label>
+      <div class="modal-actions">
+        <button id="mCancel" class="btn">取消</button>
+        <button id="mSave" class="btn primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="manage.js"></script>
+</body>
+</html>
