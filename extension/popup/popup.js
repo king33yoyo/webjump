@@ -1,6 +1,6 @@
-import { getState, saveSettings, recordVisit } from "../lib/store.js";
+import { getState, saveSettings, recordVisit, removeHistoryAt, removeSiteAndHistory, updateSite, addCustomSite } from "../lib/store.js";
 import { openSite, surpriseJump, buildScopeOptions } from "../lib/jump.js";
-import { avatarHue, kindLabel, timeAgo } from "../lib/surprise.js";
+import { avatarHue, kindLabel } from "../lib/surprise.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -141,7 +141,8 @@ function setupSearch(sites) {
 }
 
 async function renderRecent() {
-  const { history } = await getState();
+  const { history, sites } = await getState();
+  const siteById = new Map(sites.map((s) => [s.id, s]));
   const ul = $("#recentList");
   ul.innerHTML = "";
   if (!history.length) {
@@ -154,13 +155,49 @@ async function renderRecent() {
   for (const h of history.slice(0, 5)) {
     const li = document.createElement("li");
     li.appendChild(avatarEl({ title: h.title, href: h.href }));
+
+    const site = siteById.get(h.id);
+    const info = document.createElement("span");
+    info.className = "info";
     const t = document.createElement("span");
     t.className = "t";
     t.textContent = h.title;
-    const when = document.createElement("span");
-    when.className = "when";
-    when.textContent = timeAgo(h.at);
-    li.append(t, when);
+    const s = document.createElement("span");
+    s.className = "s";
+    s.textContent = site ? site.slogan || site.href : h.href;
+    info.append(t, s);
+    li.appendChild(info);
+
+    if (site) {
+      const fav = document.createElement("button");
+      fav.className = "recent-fav";
+      const paint = () => {
+        fav.textContent = site.fav ? "★" : "☆";
+        fav.classList.toggle("on", !!site.fav);
+        fav.title = site.fav ? "取消收藏" : "收藏";
+      };
+      paint();
+      fav.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const updated = await updateSite(site.id, { fav: !site.fav });
+        if (updated) {
+          site.fav = updated.fav;
+          paint();
+        }
+      });
+      li.appendChild(fav);
+    }
+
+    const del = document.createElement("button");
+    del.className = "recent-del";
+    del.title = "删除";
+    del.textContent = "✕";
+    del.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openDeleteConfirm(h);
+    });
+    li.appendChild(del);
+
     li.addEventListener("click", async () => {
       await openSite(h);
       window.close();
@@ -169,13 +206,92 @@ async function renderRecent() {
   }
 }
 
+/* ---------- 最近访问：删除确认 ---------- */
+
+let pendingDelete = null;
+
+function openDeleteConfirm(entry) {
+  pendingDelete = entry;
+  $("#confirmText").textContent = `是否删除原网页「${entry.title}」？`;
+  $("#confirmMask").hidden = false;
+}
+
+function closeDeleteConfirm() {
+  $("#confirmMask").hidden = true;
+  pendingDelete = null;
+}
+
+function setupDeleteConfirm() {
+  $("#confirmCancel").addEventListener("click", closeDeleteConfirm);
+  $("#confirmMask").addEventListener("click", (e) => {
+    if (e.target === $("#confirmMask")) closeDeleteConfirm();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !$("#confirmMask").hidden) closeDeleteConfirm();
+  });
+  $("#confirmRecordOnly").addEventListener("click", async () => {
+    if (!pendingDelete) return;
+    await removeHistoryAt(pendingDelete.at);
+    closeDeleteConfirm();
+    await renderRecent();
+  });
+  $("#confirmDeleteSite").addEventListener("click", async () => {
+    if (!pendingDelete) return;
+    const id = pendingDelete.id;
+    closeDeleteConfirm();
+    await removeSiteAndHistory(id);
+    const { sites } = await getState();
+    $("#siteCount").textContent = `${sites.length} 个有趣网站`;
+    await renderRecent();
+  });
+}
+
+/* ---------- 添加当前网页 ---------- */
+
+let tipTimer = null;
+function showTip(text) {
+  const tip = $("#tip");
+  tip.textContent = text;
+  tip.hidden = false;
+  clearTimeout(tipTimer);
+  tipTimer = setTimeout(() => {
+    tip.hidden = true;
+  }, 2500);
+}
+
+function setupAddCurrentPage() {
+  $("#addCurrent").addEventListener("click", async () => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab || !/^https?:\/\//i.test(tab.url || "")) {
+      showTip("此页面无法添加（仅支持 http/https 网页）");
+      return;
+    }
+    const href = tab.url;
+    const title = (tab.title || href).trim();
+    const norm = (u) => u.replace(/\/+$/, "");
+    const { sites } = await getState();
+    const existing = sites.find((s) => norm(s.href) === norm(href));
+    if (existing) {
+      if (!existing.fav) await updateSite(existing.id, { fav: true });
+      showTip(`「${title}」已在网站库中，已为你点亮收藏 ⭐`);
+      return;
+    }
+    await addCustomSite({ title, href, slogan: "", categories: ["未分类"], kind: "custom" });
+    const { sites: after } = await getState();
+    $("#siteCount").textContent = `${after.length} 个有趣网站`;
+    showTip(`已添加「${title}」`);
+  });
+}
+
 async function main() {
   const { sites, settings } = await getState();
   $("#siteCount").textContent = `${sites.length} 个有趣网站`;
   $("#openManage").addEventListener("click", () => chrome.runtime.openOptionsPage());
+  setupAddCurrentPage();
   await initScopeSelect(sites, settings);
   setupSurprise();
   setupSearch(sites);
+  setupDeleteConfirm();
   await renderRecent();
 }
 

@@ -14,7 +14,10 @@
         <span id="siteCount" class="muted">…个有趣网站</span>
       </div>
     </div>
-    <button id="openManage" class="icon-btn" title="打开管理页">⚙</button>
+    <div class="topbar-actions">
+      <button id="addCurrent" class="icon-btn" title="添加当前网页">＋</button>
+      <button id="openManage" class="icon-btn" title="打开管理页">⚙</button>
+    </div>
   </header>
 
   <section class="hero">
@@ -38,6 +41,18 @@
     <h3>最近访问</h3>
     <ul id="recentList"></ul>
   </section>
+
+  <div id="confirmMask" class="mask" hidden>
+    <div class="confirm-box" role="dialog" aria-modal="true">
+      <p id="confirmText" class="confirm-text"></p>
+      <p class="confirm-sub">「是」会把该网站从网站库中删除；「否」只删除这条访问记录。</p>
+      <div class="confirm-actions">
+        <button id="confirmCancel" class="c-btn">取消</button>
+        <button id="confirmRecordOnly" class="c-btn">否，仅删记录</button>
+        <button id="confirmDeleteSite" class="c-btn danger">是，删除网站</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="popup.js"></script>
 </body>

@@ -1,6 +1,6 @@
 {
   "name": "webjump",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "private": true,
   "type": "module",
   "description": "WebJump：收录 LKs 推荐网站合集的 Edge/Chrome 扩展（源码仓库元数据，插件本体在 extension/）",

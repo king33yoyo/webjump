@@ -61,7 +61,7 @@ function ok(cond, msg) {
 
 /* ---------- 引入被测模块（stub 就绪后） ---------- */
 
-const { ensureInit, getState, updateSite, recordVisit, saveSettings, patchState } = await import(
+const { ensureInit, getState, updateSite, recordVisit, saveSettings, patchState, addCustomSite, removeHistoryAt, removeSiteAndHistory } = await import(
   "../extension/lib/store.js"
 );
 const { pickSurprise } = await import("../extension/lib/jump.js");
@@ -183,6 +183,32 @@ console.log("eligibleSites");
   ];
   ok(eligibleSites(data, "all").length === 2, "all 范围排除屏蔽");
   ok(eligibleSites(data, "cat:工具").map((s) => s.id).join() === "a", "分类过滤");
+}
+
+/* ---------- v1.0.4 最近访问与自定义站点 ---------- */
+
+console.log("最近访问与自定义站点");
+{
+  const custom = await addCustomSite({
+    title: "测试站点",
+    href: "https://example.com/test",
+    categories: ["未分类"],
+    kind: "custom",
+  });
+  ok((await getState()).sites.some((s) => s.id === custom.id && s.custom), "添加自定义站点");
+
+  await recordVisit(custom);
+  const visitAt = (await getState()).history[0].at;
+  await removeHistoryAt(visitAt);
+  const afterRecordRemoval = await getState();
+  ok(!afterRecordRemoval.history.some((h) => h.at === visitAt), "只删除指定访问记录");
+  ok(afterRecordRemoval.sites.some((s) => s.id === custom.id), "删记录后网站仍在");
+
+  await recordVisit(custom);
+  await removeSiteAndHistory(custom.id);
+  const afterSiteRemoval = await getState();
+  ok(!afterSiteRemoval.sites.some((s) => s.id === custom.id), "删除原网站");
+  ok(!afterSiteRemoval.history.some((h) => h.id === custom.id), "删除原网站时清理其访问记录");
 }
 
 console.log(process.exitCode ? "\n部分测试未通过" : `\n全部通过（${passed} 项断言）`);

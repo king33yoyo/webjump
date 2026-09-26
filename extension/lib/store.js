@@ -114,6 +114,22 @@ export async function removeSite(id) {
   await chrome.storage.local.set({ sites: next, bag: [] });
 }
 
+/** 删除单条访问记录（按时间戳，at 唯一标识一条记录），只动历史不动站点。 */
+export async function removeHistoryAt(at) {
+  const { history } = await getState();
+  await chrome.storage.local.set({ history: history.filter((h) => h.at !== at) });
+}
+
+/** 删除网站本身，并级联清掉历史里所有指向它的记录（用于「是，删除原网页」）。 */
+export async function removeSiteAndHistory(id) {
+  const { sites, history } = await getState();
+  await chrome.storage.local.set({
+    sites: sites.filter((s) => s.id !== id),
+    history: history.filter((h) => h.id !== id),
+    bag: [],
+  });
+}
+
 /** 恢复默认种子数据（保留设置），清空收藏/屏蔽/历史/自定义。 */
 export async function resetSites() {
   await chrome.storage.local.remove(["sites", "history", "bag", "lastScope"]);
