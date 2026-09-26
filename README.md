@@ -1,6 +1,6 @@
 # WebJump · 网站惊喜跳跃
 
-一个 Edge / Chrome 扩展（Manifest V3），收录了 B 站 UP 主 **LKs**《良心到难以置信的网站推荐》第 1～12 期的 **303 个有趣网站**，并围绕它做了收藏、屏蔽、分类管理和核心的 **Surprise 一键随机跳转**。当前源码版本：**v1.0.4**。
+一个 Edge / Chrome 扩展（Manifest V3），收录了 B 站 UP 主 **LKs**《良心到难以置信的网站推荐》第 1～12 期的 **303 个有趣网站**，并围绕它做了收藏、屏蔽、分类管理和核心的 **Surprise 一键随机跳转**。当前源码版本：**v1.0.5**。
 
 > 数据来源于开源项目 [xiangjianan/lks](https://github.com/xiangjianan/lks)（[lkssite.vip](https://lkssite.vip/)，MIT License）。
 
@@ -11,7 +11,7 @@
 - ⌨️ **快捷键**：`Alt+Shift+S` 直接来一发惊喜；`Alt+Shift+W` 打开弹窗（可在 `edge://extensions/shortcuts` 自定义）。
 - 🖱️ **右键菜单**：页面任意位置右键 →「Surprise！随机跳转一个有趣网站」。
 - 🗂️ **管理页**：搜索、按期数/分类/状态筛选、排序、收藏 ⭐、屏蔽 🚫、添加/编辑/删除自定义网站、统计面板。
-- ➕ **添加当前网页**：在普通 `http/https` 页面点弹窗右上角的「＋」；若网址已经收录，则为它点亮收藏。
+- ➕ **添加当前网页**：在普通 `http/https` 页面点弹窗右上角的「＋」；若网址已经收录，则为它点亮收藏。此操作仅在点击工具栏按钮后临时读取当前标签页的网址和标题。
 - 🕘 **最近访问**：弹窗显示最近 5 条记录，可直接收藏；删除时可以选择只清除访问记录，或连同网站一起从网站库删除。
 - 💾 **导入 / 导出**：JSON 备份（含收藏、历史、设置），也可直接导入 lks 仓库的原始数据文件合并新站点。
 - 🌐 **中英文界面名称与简介**：通过浏览器扩展本地化文件提供。
@@ -21,7 +21,7 @@
 ## 安装
 
 - **Edge 用户**：从 [Microsoft Edge 加载项商店的 WebJump 官方页面](https://microsoftedge.microsoft.com/addons/detail/webjump-%C2%B7-%E7%BD%91%E7%AB%99%E6%83%8A%E5%96%9C%E8%B7%B3%E8%B7%83/ehbebdanldkacmlojlgpipcmmmgilphn)安装。商店版本以页面显示为准，可能晚于 GitHub Release。
-- **下载当前版本**：从 [GitHub Releases](https://github.com/king33yoyo/webjump/releases)下载 `webjump-v1.0.4.zip`，解压后按下方步骤加载。发布包根目录就是 `manifest.json`，不要直接把 zip 当作解压目录加载。
+- **下载当前版本**：从 [GitHub Releases](https://github.com/king33yoyo/webjump/releases)下载 `webjump-v1.0.5.zip`，解压后按下方步骤加载。发布包根目录就是 `manifest.json`，不要直接把 zip 当作解压目录加载。
 
 ### 开发者模式加载源码或 Release
 

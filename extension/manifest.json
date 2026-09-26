@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_name__",
   "short_name": "WebJump",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "default_locale": "en",
   "description": "__MSG_description__",
   "icons": {
@@ -27,7 +27,7 @@
     "page": "manage/manage.html",
     "open_in_tab": true
   },
-  "permissions": ["storage", "favicon", "contextMenus"],
+  "permissions": ["storage", "favicon", "contextMenus", "activeTab"],
   "commands": {
     "_execute_action": {
       "suggested_key": {

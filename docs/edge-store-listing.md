@@ -53,7 +53,8 @@ https://github.com/king33yoyo/webjump
 - **权限用途说明**（提交表单如被问及）：
   - `storage` — 在本地保存网站数据、收藏/屏蔽状态、访问历史与设置；
   - `favicon` — 读取网站图标用于弹窗与管理页列表展示（仅本地渲染）；
-  - `contextMenus` — 提供右键菜单「Surprise」入口。
+  - `contextMenus` — 提供右键菜单「Surprise」入口；
+  - `activeTab` — 用户主动点击工具栏图标时，临时读取当前标签页的网址和标题，以支持「添加当前网页」。
 
 ## 审核预期
 
